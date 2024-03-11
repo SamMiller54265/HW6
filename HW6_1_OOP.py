@@ -1,23 +1,23 @@
-#region imports
+# region imports
 from scipy.optimize import fsolve
-#endregion
+# endregion
 
-#region class definitions
+# region class definitions
 class ResistorNetwork():
-    #region constructor
+    # region constructor
     def __init__(self):
         """
         The resistor network consists of Loops, Resistors and Voltage Sources.
         This is the constructor for the network and it defines fields for Loops, Resistors and Voltage Sources.
         You can populate these lists manually or read them in from a file.
         """
-        #create some instance variables that are logical parts of a resistor network
+        # create some instance variables that are logical parts of a resistor network
         self.Loops = []  # initialize an empty list of loop objects in the network
         self.Resistors = []  # initialize an empty a list of resistor objects in the network
         self.VSources = []  # initialize an empty a list of source objects in the network
-    #endregion
+    # endregion
 
-    #region methods/functions
+    # region methods/functions
     def BuildNetworkFromFile(self, filename):
         """
         This function reads the lines from a file and processes the file to populate the fields
@@ -56,16 +56,19 @@ class ResistorNetwork():
         :param Txt: [string] the lines of the text file
         :return: a resistor object
         """
-        R = #JES MISSING CODE  # instantiate a new resistor object
+        R = Resistor()  # instantiate a new resistor object
         N += 1  # <Resistor> was detected, so move to next line in Txt
-        txt = #JES MISSING code  # retrieve line from Txt and make it lower case using Txt[N].lower()
+        txt = Txt[N].lower()  # retrieve line from Txt and make it lower case
         while "resistor" not in txt:
             if "name" in txt:
-                R.Name = #JES MISSING CODE
+                R.Name = txt.split('=')[1].strip()
             if "resistance" in txt:
-                R.Resistance = #JES MISSING CODE
-            N+=1
-            txt=Txt[N].lower()
+                R.Resistance = float(txt.split('=')[1].strip())
+            N += 1
+            if N < len(Txt):  # Check if we're still within the Txt bounds
+                txt = Txt[N].lower()
+            else:
+                break
 
         self.Resistors.append(R)  # append the resistor object to the list of resistors
         return N
@@ -123,12 +126,13 @@ class ResistorNetwork():
         :return: a list of the currents in the resistor network
         """
         # need to set the currents to that Kirchoff's laws are satisfied
-        i0 = #JES MISSING CODE  #define an initial guess for the currents in the circuit
-        i = fsolve(self.GetKirchoffVals,i0)
+        # Assuming three currents for initial guess. Adjust the number of elements based on your circuit.
+        i0 = [0.01, 0.01, 0.01]  # Example initial guess for 3 currents
+        i = fsolve(self.GetKirchoffVals, i0)
         # print output to the screen
-        print("I1 = {:0.1f}".format(i[0]))
-        print("I2 = {:0.1f}".format(i[1]))
-        print("I3 = {:0.1f}".format(i[2]))
+        print("I1 = {:0.1f} A".format(i[0]))
+        print("I2 = {:0.1f} A".format(i[1]))
+        print("I3 = {:0.1f} A".format(i[2]))
         return i
 
     def GetKirchoffVals(self,i):
@@ -218,9 +222,9 @@ class Resistor():
         :param i: current in amps
         :param name: name of resistor by alphabetically ordered pair of node names
         """
-        #JES Missing Code = R
-        #JES Missing Code = i
-        #JES Missing Code = name
+        self.Resistance = R
+        self.Current = i
+        self.Name = name
     #endregion
 
     #region methods/functions
@@ -249,15 +253,15 @@ class VoltageSource():
 
 # region Function Definitions
 def main():
-    """
-    This program solves for the unknown currents in the circuit of the homework assignment.
-    :return: nothing
-    """
-    Net =  # JES MISSING CODE  #Instantiate a resistor network object
-    Net.  # JES MISSING CODE #call the function from Net that builds the resistor network from a text file
+    Net = ResistorNetwork()  # Instantiate a resistor network object
+    Net.BuildNetworkFromFile('ResistorNetwork.txt')  # Call the function from Net that builds the network from a text file
     IVals = Net.AnalyzeCircuit()
 # endregion
 
+# region function calls
+if __name__=="__main__":
+    main()
+# endregion
 # region function calls
 if __name__=="__main__":
     main()
