@@ -2,6 +2,8 @@
 from scipy.optimize import fsolve
 # endregion
 
+#Chatgpt helped to fill in missing code for this file
+
 # region class definitions
 class ResistorNetwork():
     # region constructor
