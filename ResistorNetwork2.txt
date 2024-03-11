@@ -28,12 +28,12 @@ Resistance = 4
 </Resistor>
 
 <Resistor>
-Name = ed
+Name = de
 Resistance = 5
 </Resistor>
 
 <Source>
-Name = de
+Name = ef
 Type = Voltage
 Value = 32
 </Source>
